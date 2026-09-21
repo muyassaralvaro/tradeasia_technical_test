@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ProductDomainCategory extends Model
+{
+    protected $table = 'product_domain_category';
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function prodind()
+    {
+        return $this->belongsTo(Prodind::class);
+    }
+
+    public function productLang()
+    {
+        return $this->hasOne(ProductLang::class, 'product_id', 'product_id');
+    }
+
+    public function productSeo()
+    {
+        return $this->hasOne(ProductSeo::class, 'product_id', 'product_id');
+    }
+}
+
+$products = ProductDomainCategory::with([
+        'product' => function($q) {
+            $q->where('publish', 1);
+        },
+        'category' => function($q) {
+            $q->where('publish', 1);
+        },
+        'prodind' => function($q) {
+            $q->where('publish', 1);
+        },
+        'productLang' => function($q) use ($language) {
+            $q->where('language_id', $language);
+        },
+        'productSeo' => function($q) use ($domain_id, $language) {
+            $q->where('domain_id', $domain_id)
+              ->where('language_id', $language);
+        }
+    ])
+    ->where('domain_id', $domain_id)
+    ->get()
+    ->map(function($item) {
+        return [
+            'product_id' => $item->product_id,
+            'productname' => $item->productLang?->productname,
+        ];
+    })
+    ->unique('product_id')  
+    ->sortBy('productname') 
+    ->values(); 

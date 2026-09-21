@@ -1,0 +1,15 @@
+Resiko SEO metadata jika tidak menggunakan metdata:
+1. halaman akan sulit untuk muncul di pencarian search engine
+2. pada search engine, jika halaman tertampil, tidak akan tertampak jelas isi dari halaman tsb
+
+rekomendasi fallback yang harusnya digunakan:
+1. menggunakan tag h1 untuk meta title
+e.g:
+$title = $meta_title ?? $h1;
+<title><?= $title ?> | (nama website/brand)</title>
+2. gunakan tag untuk menjelaskan konteks halaman
+e.g:
+<meta name="description" content="= $description ">
+3. tambah nama brand/website
+e.g:
+like number 1
